@@ -1,0 +1,659 @@
+/* Configuración General */
+#root {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  /* Fondo oscuro para que resalten los colores */
+  color: white;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Encabezados y Filas - Alineación tipo LoLdle */
+.grid-labels,
+.guess-row {
+  display: grid;
+  /* 80px para la imagen y el resto (6 atributos) se reparten igual */
+  grid-template-columns: 100px repeat(7, 1fr);
+  gap: 5px;
+  width: 100%;
+  max-width: 900px;
+  align-items: center;
+  margin: 10px auto;
+}
+
+.grid-labels span {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #fce100;
+  /* Amarillo Simpson */
+  border-bottom: 2px solid #333;
+  padding-bottom: 8px;
+}
+
+/* Celdas de la Grilla (Boxes) */
+.box {
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #333;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  overflow: hidden;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  animation: flipIn 0.5s ease forwards;
+  padding: 5px;
+  word-break: break-word;
+  /* Rompe las palabras largas */
+  font-size: 0.7rem;
+  /* Achica un poco la letra si es necesario */
+  /* Animación al aparecer */
+}
+
+/* Colores de feedback */
+.box.correct {
+  background-color: #31a24c;
+  border-color: #268a3f;
+}
+
+.box.partial {
+  background-color: #ff9800;
+  border-color: #e68a00;
+}
+
+.box.wrong {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+}
+
+.box.higher,
+.box.lower {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+}
+
+/* Celda de Imagen */
+.box.image {
+  background-color: #fff;
+  padding: 2px;
+}
+
+.box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Buscador Mejorado */
+.search-container {
+  position: relative;
+  /* Clave para que la lista flote correctamente */
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto 40px auto;
+  z-index: 1100;
+  /* Mayor que la grilla */
+}
+
+.search-container input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #fce100;
+  background: #1a1a1a;
+  color: white;
+  font-size: 1.1rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-container input:focus {
+  box-shadow: 0 0 10px rgba(252, 225, 0, 0.5);
+}
+
+/* Lista de resultados que "flota" */
+.results-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  border: 2px solid #fce100;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0 0;
+  z-index: 1200;
+  /* Asegura que esté por encima de todo */
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+.results-list li {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  text-align: left;
+  transition: background 0.2s;
+  color: white;
+}
+
+.results-list li:hover {
+  background: #444;
+}
+
+.results-list img {
+  width: 45px;
+  height: 45px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: white;
+}
+
+.near-miss-banner {
+  background-color: #f1c40f;
+  color: #2c3e50;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid #d4ac0d;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: bounce In 0.5s ease;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Mensajes de victoria */
+.win-banner {
+  background: #31a24c;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 2px solid #268a3f;
+  font-weight: bold;
+}
+
+.legend-container {
+  background-color: #fdf5e6;
+  border: 3px solid #800000;
+  border-radius: 8px;
+  padding: 15px;
+  max-width: 500px;
+  margin: 20px auto;
+  position: relative;
+  text-align: center;
+}
+
+.legend-items {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.legend-box {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+/* Colores según tu imagen */
+.correct {
+  background-color: #2ecc71;
+}
+
+.partial {
+  background-color: #f1c40f;
+}
+
+.wrong {
+  background-color: #e74c3c;
+}
+
+.higher {
+  background-color: #c0392b;
+  position: relative;
+}
+
+/* Flecha arriba */
+.lower {
+  background-color: #922b21;
+  position: relative;
+}
+
+/* Flecha abajo */
+
+/* Animación simple para las filas */
+@keyframes flipIn {
+  from {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* ... (Todo tu CSS anterior) ... */
+
+.yesterday-banner {
+  background-color: #fffaf0;
+  border: 2px solid #000;
+  padding: 10px 20px;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 10px;
+  box-shadow: 4px 4px 0px #fce100;
+  border-radius: 4px;
+}
+
+.orange-text {
+  color: #ff4500;
+  text-decoration: underline;
+}
+
+.legend-container {
+  background-color: #1e1e1e;
+  /* Cambiado a oscuro para combinar */
+  border: 2px solid #333;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.legend-title {
+  color: #fce100;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.legend-box {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+/* Ajuste de grilla para 8 columnas */
+.grid-labels,
+.guess-row {
+  grid-template-columns: 80px repeat(7, 1fr);
+}
+
+/* ==========================================================================
+   1. CONFIGURACIÓN DE FONDO ESTRUCTURAL
+   ========================================================================== */
+
+html {
+  /* Fijamos el fondo al HTML para evitar el fondo negro al hacer scroll lateral */
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url('./assets/fondo_nubes.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  /* El body debe ser transparente para que se vea el fondo del HTML */
+  background: transparent !important;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+#root {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+  background-color: transparent !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ==========================================================================
+   2. GRILLA Y TABLA DE INTENTOS (RESPONSIVE)
+   ========================================================================== */
+
+.history-container {
+  width: 100%;
+  overflow-x: auto;
+  /* Habilita el desplazamiento lateral en móviles */
+  -webkit-overflow-scrolling: touch;
+  /* Suavidad en iOS */
+  padding-bottom: 15px;
+  background: rgba(0, 0, 0, 0.1);
+  /* Fondo sutil para mejorar contraste */
+  border-radius: 12px;
+}
+
+.grid-labels,
+.guess-row {
+  display: grid;
+  /* 80px para imagen, 7 columnas iguales para atributos */
+  grid-template-columns: 80px repeat(7, 1fr);
+  gap: 8px;
+  width: 100%;
+  /* min-width asegura que las celdas no se colapsen en móviles */
+  min-width: 700px;
+  align-items: center;
+  margin: 10px auto;
+  padding: 0 15px;
+}
+
+.grid-labels span {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #fce100;
+  /* Amarillo Simpson */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 8px;
+}
+
+/* ==========================================================================
+   3. CELDAS (BOXES) Y TEXTO DINÁMICO
+   ========================================================================== */
+
+.box {
+  aspect-ratio: 1/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px solid #333;
+  border-radius: 4px;
+  font-weight: bold;
+  color: white;
+  padding: 5px;
+  overflow: hidden;
+  word-break: break-word;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  animation: flipIn 0.5s ease forwards;
+
+  /* FUENTE FLUIDA: Escala entre 0.55rem y 0.85rem según el ancho del viewport */
+  font-size: clamp(0.55rem, 1.1vw, 0.85rem);
+  line-height: 1.1;
+}
+
+/* Manejo de textos largos (ej. trabajos extensos) */
+.box span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  /* Trunca a 3 líneas */
+  line-clamp: 3;
+  /* Propiedad estándar para compatibilidad */
+  overflow: hidden;
+}
+
+/* Estados de acierto (Colores LoLdle/Narutodle) */
+.box.correct {
+  background-color: #31a24c;
+  border-color: #268a3f;
+}
+
+.box.partial {
+  background-color: #ff9800;
+  border-color: #e68a00;
+}
+
+.box.wrong {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+}
+
+.box.higher,
+.box.lower {
+  background-color: #e74c3c;
+  border-color: #c0392b;
+}
+
+.box.image {
+  background-color: #fff;
+  padding: 2px;
+}
+
+.box.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   4. BUSCADOR Y AUTOCOMPLETADO
+   ========================================================================== */
+
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto 30px auto;
+  z-index: 1100;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #fce100;
+  background: #1a1a1a;
+  color: white;
+  font-size: 1.1rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.results-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  border: 2px solid #fce100;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0 0;
+  z-index: 1200;
+  border-radius: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.8);
+}
+
+.results-list li {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  color: white;
+  transition: background 0.2s;
+}
+
+.results-list li:hover {
+  background: #444;
+}
+
+.results-list img {
+  width: 45px;
+  height: 45px;
+  border-radius: 5px;
+  object-fit: cover;
+  background: white;
+}
+
+/* ==========================================================================
+   5. COMPONENTES EXTRA (Banners, Leyenda y Donaciones)
+   ========================================================================== */
+
+.near-miss-banner {
+  background-color: #f1c40f;
+  color: #2c3e50;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  border: 2px solid #d4ac0d;
+  animation: bounceIn 0.5s ease;
+}
+
+.win-banner {
+  background: #31a24c;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 2px solid #268a3f;
+  font-weight: bold;
+}
+
+.mp-button {
+  display: inline-block;
+  background-color: #009ee3;
+  /* Color Mercado Pago */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 10px 0;
+  transition: transform 0.2s;
+}
+
+.mp-button:hover {
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   6. ANIMACIONES Y MEDIA QUERIES
+   ========================================================================== */
+
+@keyframes flipIn {
+  from {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .grid-labels,
+  .guess-row {
+    grid-template-columns: 65px repeat(7, 1fr);
+    min-width: 600px;
+    gap: 4px;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+.attempts-counter {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid #fce100;
+  /* Amarillo Simpson */
+  border-radius: 8px;
+  padding: 8px 15px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #fce100;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.attempts-counter span {
+  color: white;
+  background: #31a24c;
+  /* Verde correcto */
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
