@@ -32,7 +32,9 @@ const GuessRow = ({ item }) => {
     <div className="guess-row">
       <div className="box image">
         <img
-          src={`http://localhost:5256/Images/${getVal(item, 'image')}`}
+          // src={`http://localhost:5256/Images/${getVal(item, 'image')}`}
+          // ✅ Reemplazo para las filas de resultados
+          src={`https://simpsondle-api.onrender.com/Images/${c.image}`}
           alt={getVal(item, 'name')}
           onError={(e) => { e.target.src = 'https://via.placeholder.com/80?text=S/D'; }}
         />

@@ -11,7 +11,8 @@ function App() {
   const [gameOver, setGameOver] = useState(false)
   const [nearMiss, setNearMiss] = useState(false)
 
-  const API_URL = "http://localhost:5256/api";
+  //const API_URL = "http://localhost:5256/api";
+  const API_URL = "https://simpsondle-api.onrender.com/api";
 
   const playSound = (type) => {
     const audio = new Audio(`/${type}.mp3`);

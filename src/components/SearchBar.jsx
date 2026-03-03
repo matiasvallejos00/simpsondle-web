@@ -38,7 +38,9 @@ const SearchBar = ({ characters = [], onGuess }) => { // characters = [] evita q
           {filtered.map(c => (
             <li key={c.slug} onClick={() => handleSelect(c.slug)}>
               <img
-                src={`http://localhost:5256/Images/${c.image}`}
+                //src={`http://localhost:5256/Images/${c.image}`}
+                // ✅ Reemplazo para las filas de resultados
+                src={`https://simpsondle-api.onrender.com/Images/${c.image}`}
                 alt={c.name}
                 style={{ width: '40px', height: '40px', marginRight: '10px', borderRadius: '4px' }}
               />
