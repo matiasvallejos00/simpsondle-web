@@ -181,7 +181,7 @@ function App() {
             </button>
           </div>
         )}
-
+//
         <div className="history-container">
           <div className="grid-labels">
             <span>Personaje</span>
