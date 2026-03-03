@@ -30,40 +30,45 @@ const GuessRow = ({ item }) => {
 
   return (
     <div className="guess-row">
-      <div className="box image">
+      {/* Columna de Personaje con Imagen */}
+      <div className="cell character-cell">
         <img
-          // src={`http://localhost:5256/Images/${getVal(item, 'image')}`}
-          // ✅ Reemplazo para las filas de resultados
-          src={`https://simpsondle-api.onrender.com/Images/${item.image}`}
-          alt={getVal(item, 'name')}
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/80?text=S/D'; }}
+          src={item.image}
+          alt={item.name}
+          style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '5px' }}
         />
+        <span className="char-name">{item.name}</span>
       </div>
 
-      <div className={getBoxClass(item.results?.gender)}>
-        {getVal(item, 'gender')}
+      {/* Atributos comparados con colores según el resultado de la API */}
+      <div className={`cell ${item.results?.gender || 'wrong'}`}>
+        {item.gender}
       </div>
 
-      <div className={getBoxClass(item.results?.ageGroup)}>
-        {getVal(item, 'ageGroup')}
+      <div className={`cell ${item.results?.ageGroup || 'wrong'}`}>
+        {item.ageGroup}
       </div>
 
-      <div className={getBoxClass(item.results?.hair)}>
-        {getVal(item, 'hair')}
+      <div className={`cell ${item.results?.hair || 'wrong'}`}>
+        {item.hair}
       </div>
 
-      <div className={getBoxClass(item.results?.job)}>
-        {getVal(item, 'job')}
+      <div className={`cell ${item.results?.job || 'wrong'}`}>
+        {item.job}
       </div>
 
-      {/* Arreglo para T1 en lugar de Tundefined usando firstSeason o FirstSeason */}
-      {renderSeason(item.results?.season, `T${getVal(item, 'firstSeason')}`)}
-      <div className={getBoxClass(item.results?.extra)}>
-        {getVal(item, 'extra')}
+      {/* Temporada con flechitas indicadoras */}
+      <div className={`cell ${item.results?.firstSeason || 'wrong'}`}>
+        {item.firstSeason}
+        {item.results?.firstSeason === 'higher' ? ' ⬆️' : item.results?.firstSeason === 'lower' ? ' ⬇️' : ''}
       </div>
 
-      <div className={getBoxClass(item.results?.status)}>
-        {getVal(item, 'status')}
+      <div className={`cell ${item.results?.extra || 'wrong'}`}>
+        {item.extra}
+      </div>
+
+      <div className={`cell ${item.results?.status || 'wrong'}`}>
+        {item.status}
       </div>
     </div>
   );
