@@ -375,40 +375,93 @@ body {
    2. GRILLA Y TABLA DE INTENTOS (RESPONSIVE)
    ========================================================================== */
 
+/* Contenedor principal de la tabla */
 .history-container {
   width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
   overflow-x: auto;
-  /* Habilita el desplazamiento lateral en móviles */
-  -webkit-overflow-scrolling: touch;
-  /* Suavidad en iOS */
-  padding-bottom: 15px;
-  background: rgba(0, 0, 0, 0.1);
-  /* Fondo sutil para mejorar contraste */
-  border-radius: 12px;
 }
 
-.grid-labels,
+/* Fila de etiquetas (cabecera) */
+.grid-labels {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 1px 1px 2px black;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+/* Diseño de cada intento (Fila) */
 .guess-row {
   display: grid;
-  /* 80px para imagen, 7 columnas iguales para atributos */
-  grid-template-columns: 80px repeat(7, 1fr);
-  gap: 8px;
-  width: 100%;
-  /* min-width asegura que las celdas no se colapsen en móviles */
-  min-width: 700px;
-  align-items: center;
-  margin: 10px auto;
-  padding: 0 15px;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+  animation: fadeIn 0.5s ease;
 }
 
-.grid-labels span {
+/* Celdas individuales */
+.cell {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.9rem;
   font-weight: bold;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  color: #fce100;
-  /* Amarillo Simpson */
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 8px;
+  color: white;
+  padding: 5px;
+}
+
+/* Columna específica del personaje */
+.character-cell {
+  flex-direction: column;
+  background: white !important;
+  color: #333 !important;
+  font-size: 0.7rem;
+}
+
+.character-cell img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Colores de validación (Basados en tu imagen original) */
+.correct {
+  background-color: #37eb34 !important;
+}
+
+/* Verde */
+.partial {
+  background-color: #ffcc00 !important;
+}
+
+/* Amarillo */
+.wrong {
+  background-color: #e84118 !important;
+}
+
+/* Rojo */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ==========================================================================

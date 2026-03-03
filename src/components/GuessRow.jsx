@@ -30,46 +30,21 @@ const GuessRow = ({ item }) => {
 
   return (
     <div className="guess-row">
-      {/* Columna de Personaje con Imagen */}
       <div className="cell character-cell">
-        <img
-          src={item.image}
-          alt={item.name}
-          style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '5px' }}
-        />
-        <span className="char-name">{item.name}</span>
+        <img src={item.image} alt={item.name} />
+        <span>{item.name}</span>
       </div>
-
-      {/* Atributos comparados con colores según el resultado de la API */}
-      <div className={`cell ${item.results?.gender || 'wrong'}`}>
-        {item.gender}
-      </div>
-
-      <div className={`cell ${item.results?.ageGroup || 'wrong'}`}>
-        {item.ageGroup}
-      </div>
-
-      <div className={`cell ${item.results?.hair || 'wrong'}`}>
-        {item.hair}
-      </div>
-
-      <div className={`cell ${item.results?.job || 'wrong'}`}>
-        {item.job}
-      </div>
-
-      {/* Temporada con flechitas indicadoras */}
+      {/* Usamos el encadenamiento opcional ?. para evitar errores de 'undefined' */}
+      <div className={`cell ${item.results?.gender || 'wrong'}`}>{item.gender}</div>
+      <div className={`cell ${item.results?.ageGroup || 'wrong'}`}>{item.ageGroup}</div>
+      <div className={`cell ${item.results?.hair || 'wrong'}`}>{item.hair}</div>
+      <div className={`cell ${item.results?.job || 'wrong'}`}>{item.job}</div>
       <div className={`cell ${item.results?.firstSeason || 'wrong'}`}>
         {item.firstSeason}
         {item.results?.firstSeason === 'higher' ? ' ⬆️' : item.results?.firstSeason === 'lower' ? ' ⬇️' : ''}
       </div>
-
-      <div className={`cell ${item.results?.extra || 'wrong'}`}>
-        {item.extra}
-      </div>
-
-      <div className={`cell ${item.results?.status || 'wrong'}`}>
-        {item.status}
-      </div>
+      <div className={`cell ${item.results?.extra || 'wrong'}`}>{item.extra}</div>
+      <div className={`cell ${item.results?.status || 'wrong'}`}>{item.status}</div>
     </div>
   );
 };
