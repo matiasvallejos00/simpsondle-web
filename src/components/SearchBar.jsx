@@ -1,24 +1,26 @@
 import { useState } from 'react';
 
-const SearchBar = ({ characters = [], onGuess }) => { // characters = [] evita que el .filter rompa si no hay datos
+const SearchBar = ({ characters = [], onGuess }) => {
   const [query, setQuery] = useState("");
 
   // Filtramos ignorando espacios y mayúsculas
+  // Agregamos chequeo de Name/name por si la API devuelve mayúsculas
   const filtered = query.trim().length > 0
-    ? characters.filter(c =>
-      c.name.toLowerCase().includes(query.toLowerCase().trim())
-    ).slice(0, 6)
+    ? characters.filter(c => {
+      const characterName = c.name || c.Name || "";
+      return characterName.toLowerCase().includes(query.toLowerCase().trim());
+    }).slice(0, 6)
     : [];
 
   const handleSelect = (slug) => {
-    console.log("Enviando slug al App.jsx:", slug); // <-- Para que veas en la consola (F12) que el clic funciona
     onGuess(slug);
     setQuery("");
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && filtered.length > 0) {
-      handleSelect(filtered[0].slug);
+    const firstResult = filtered[0];
+    if (e.key === 'Enter' && firstResult) {
+      handleSelect(firstResult.slug || firstResult.Slug);
     }
   };
 
@@ -36,15 +38,21 @@ const SearchBar = ({ characters = [], onGuess }) => { // characters = [] evita q
       {filtered.length > 0 && (
         <ul className="results-list">
           {filtered.map(c => (
-            <li key={c.slug} onClick={() => handleSelect(c.slug)}>
+            <li key={c.slug || c.Slug} onClick={() => handleSelect(c.slug || c.Slug)}>
               <img
-                //src={`http://localhost:5256/Images/${c.image}`}
-                // ✅ Reemplazo para las filas de resultados
-                src={`https://simpsondle-api.onrender.com/Images/${item.image}`}
-                alt={c.name}
-                style={{ width: '40px', height: '40px', marginRight: '10px', borderRadius: '4px' }}
+                // ✅ CORREGIDO: Usamos 'c' que es la variable del map, no 'item'
+                // ✅ Agregamos fallback para Image (mayúscula)
+                src={`https://simpsondle-api.onrender.com/Images/${c.image || c.Image}`}
+                alt={c.name || c.Name}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  marginRight: '10px',
+                  borderRadius: '4px',
+                  objectFit: 'cover'
+                }}
               />
-              {c.name}
+              {c.name || c.Name}
             </li>
           ))}
         </ul>
