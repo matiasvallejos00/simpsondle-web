@@ -11,8 +11,9 @@ function App() {
   const [gameOver, setGameOver] = useState(false)
   const [nearMiss, setNearMiss] = useState(false)
 
-  //const API_URL = "http://localhost:5256/api";
+  // URL de tu API en Render
   const API_URL = "https://simpsondle-api.onrender.com/api";
+  const IMAGE_BASE_URL = "https://simpsondle-api.onrender.com/Images";
 
   const playSound = (type) => {
     const audio = new Audio(`/${type}.mp3`);
@@ -21,17 +22,17 @@ function App() {
   };
 
   useEffect(() => {
-    // 1. Cargar personajes
+    // 1. Cargar todos los personajes para el buscador
     axios.get(`${API_URL}/characters`)
       .then(res => setAllCharacters(res.data))
       .catch(err => console.error("Error cargando personajes", err))
 
-    // 2. Obtener personaje de ayer (con manejo de error silencioso si no existe aún)
+    // 2. Obtener personaje de ayer
     axios.get(`${API_URL}/characters/yesterday`)
       .then(res => setYesterdayChar(res.data))
       .catch(err => console.warn("Aún no hay personaje de ayer disponible"))
 
-    // 3. Lógica de Reinicio Diario
+    // 3. Lógica de Reinicio Diario y Carga de Historial Local
     const today = new Date().toDateString();
     const lastDate = localStorage.getItem('simpsondle_date');
 
@@ -41,34 +42,34 @@ function App() {
       setHistory([]);
       setGameOver(false);
     } else {
-      const savedSlugs = localStorage.getItem('simpsondle_attempts') || ""
-      if (savedSlugs) {
-        axios.get(`${API_URL}/guess/history?slugs=${savedSlugs}`)
-          .then(res => {
-            setHistory(res.data)
-            const won = res.data.some(item =>
-              item.results && Object.values(item.results).every(val => val === "correct")
-            )
-            if (won) setGameOver(true)
-          })
-          .catch(err => console.error("Error cargando historial", err))
+      // Cargamos los slugs guardados hoy
+      const savedSlugs = localStorage.getItem('simpsondle_attempts') || "";
+      if (savedSlugs && allCharacters.length > 0) {
+        // Aquí podrías reconstruir el historial si tuvieras el endpoint de historial
+        // Por ahora, solo evitamos que se rompa al cargar
       }
     }
-  }, [])
+  }, [allCharacters.length]); // Se ejecuta de nuevo cuando cargan los personajes
 
   const handleGuess = async (selectedSlug) => {
+    // Evitar duplicados
     const isAlreadyGuessed = history.some(item => (item.slug || item.Slug) === selectedSlug);
     if (isAlreadyGuessed || gameOver) return
 
     try {
-      const response = await axios.post(`${API_URL}/guess`, { slug: selectedSlug })
-      const charInfo = allCharacters.find(c => (c.slug || c.Slug) === selectedSlug)
+      // 1. Enviamos el intento a la API
+      const response = await axios.post(`${API_URL}/characters/guess`, { slug: selectedSlug })
       const resData = response.data;
+      
+      // 2. Buscamos la info del personaje en nuestra lista local
+      const charInfo = allCharacters.find(c => (c.slug || c.Slug) === selectedSlug)
+      if (!charInfo) return;
 
+      // 3. Armamos el objeto para la tabla con la imagen de RENDER
       const newItem = {
         name: charInfo.name || charInfo.Name,
         slug: charInfo.slug || charInfo.Slug,
-        image: charInfo.image || charInfo.Image,
+        image: `${IMAGE_BASE_URL}/${charInfo.image || charInfo.Image}`, 
         gender: charInfo.gender || charInfo.Gender,
         ageGroup: charInfo.ageGroup || charInfo.AgeGroup,
         hair: charInfo.hair || charInfo.Hair,
@@ -79,6 +80,7 @@ function App() {
         results: resData.results
       };
 
+      // 4. Lógica de ganar o fallar
       const allAttributesMatch = Object.values(resData.results).every(val => val === "correct");
 
       if (allAttributesMatch && !resData.isCorrect) {
@@ -88,6 +90,7 @@ function App() {
 
       setHistory(prev => [newItem, ...prev])
 
+      // Guardar en local storage
       const saved = localStorage.getItem('simpsondle_attempts')
       localStorage.setItem('simpsondle_attempts', saved ? `${saved},${selectedSlug}` : selectedSlug)
 
@@ -114,14 +117,13 @@ function App() {
       </header>
 
       <main className="container">
-        {/* ESPACIO PARA PUBLICIDAD SUPERIOR */}
         <div className="ad-container top-ad">
-            <span className="ad-placeholder">Publicidad</span>
+          <span className="ad-placeholder">Publicidad</span>
         </div>
 
         {yesterdayChar && (
           <div className="yesterday-banner">
-            El personaje de ayer era <span className="orange-text">#{yesterdayChar.id} {yesterdayChar.name}</span>
+            El personaje de ayer era <span className="orange-text">#{yesterdayChar.id || yesterdayChar.Id} {yesterdayChar.name || yesterdayChar.Name}</span>
           </div>
         )}
 
@@ -136,7 +138,6 @@ function App() {
           </div>
         </div>
 
-        {/* CONTADOR DE INTENTOS */}
         <div className="attempts-counter">
           Intentos: <span>{history.length}</span>
         </div>
@@ -156,7 +157,7 @@ function App() {
           <div className="win-banner">
             <h2>¡Excelente!</h2>
             <p>Adivinaste al personaje en <strong>{history.length}</strong> intentos.</p>
-            
+
             <div className="donation-section">
               <p>¿Te gustó el juego? ¡Invitame una Duff!</p>
               <a
@@ -181,7 +182,6 @@ function App() {
           </div>
         )}
 
-        {/* CONTENEDOR CON SCROLL PARA LA GRILLA */}
         <div className="history-container">
           <div className="grid-labels">
             <span>Personaje</span>
@@ -200,9 +200,8 @@ function App() {
           </div>
         </div>
 
-        {/* ESPACIO PARA PUBLICIDAD INFERIOR */}
         <div className="ad-container bottom-ad">
-            <span className="ad-placeholder">Publicidad</span>
+          <span className="ad-placeholder">Publicidad</span>
         </div>
       </main>
     </div>

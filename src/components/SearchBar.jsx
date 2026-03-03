@@ -40,7 +40,7 @@ const SearchBar = ({ characters = [], onGuess }) => { // characters = [] evita q
               <img
                 //src={`http://localhost:5256/Images/${c.image}`}
                 // ✅ Reemplazo para las filas de resultados
-                src={`https://simpsondle-api.onrender.com/Images/${c.image}`}
+                src={`https://simpsondle-api.onrender.com/Images/${item.image}`}
                 alt={c.name}
                 style={{ width: '40px', height: '40px', marginRight: '10px', borderRadius: '4px' }}
               />
